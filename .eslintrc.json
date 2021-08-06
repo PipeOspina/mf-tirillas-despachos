@@ -1,7 +1,6 @@
 {
     "env": {
-        "browser": true,
-        "es2021": true
+        "browser": true
     },
     "extends": [
         "plugin:react/recommended",
@@ -20,5 +19,12 @@
         "@typescript-eslint"
     ],
     "rules": {
+        "no-use-before-define": "off",
+        "indent": ["error", 4],
+        "react/jsx-indent": ["error", 4],
+        "react/jsx-filename-extension": ["error", { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
+        "import/no-unresolved": "off",
+        "import/extensions": "off",
+        "react/jsx-indent-props": ["error", 4]
     }
 }
