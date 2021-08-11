@@ -33,8 +33,11 @@ const useStyles = makeStyles((theme: Theme) => ({
         paddingBottom: theme.spacing(5),
     },
     divider: {
-        width: '130%',
-        margin: `${theme.spacing(3)} 0 ${theme.spacing(5)} -15% !important`,
+        [theme.breakpoints.up('md')]: {
+            width: '130%',
+            marginLeft: '-15% !important',
+        },
+        margin: `${theme.spacing(3)} 0 ${theme.spacing(5)} 0 !important`,
     },
     downloadButton: {
         borderRadius: '50px !important',
@@ -66,7 +69,12 @@ const Content = () => {
                 pdfRef.current,
                 {
                     paperSize: 'A4',
-                    margin: 100,
+                    margin: {
+                        bottom: 50,
+                        left: 100,
+                        right: 100,
+                        top: 50,
+                    },
                     author: 'Coordinadora Mercantil',
                     fileName: `Tirilla Digital - ${strip.strip?.idLlamada} - ${strip.strip?.fechaLlamada}.pdf`,
                 },
@@ -83,7 +91,7 @@ const Content = () => {
 
     useEffect(() => {
         if (strip.strip?.tiquete) {
-            document.title = `Tirilla Digital - ${strip.strip?.idLlamada} - ${strip.strip?.fechaLlamada}`;
+            document.title = `Relación de despachos - ${strip.strip?.idLlamada} - ${strip.strip?.fechaLlamada}`;
             const data = new Blob([strip.strip.tiquete], { type: 'text/plain' });
             if (downloadUrl) window.URL.revokeObjectURL(downloadUrl);
             setDownloadUrl(window.URL.createObjectURL(data));
@@ -107,6 +115,16 @@ const Content = () => {
                         });
                     },
                 });
+            if (window?.location) {
+                setTimeout(() => {
+                    setStrip((current) => {
+                        if (current.loading) {
+                            window.location.reload();
+                        }
+                        return current;
+                    });
+                }, 5000);
+            }
         } else {
             setStrip({
                 loading: false,
@@ -125,9 +143,11 @@ const Content = () => {
     return (
         <>
             <Container maxWidth="xs" className={classes.root}>
-                <Header />
-                <Divider className={classes.divider} />
-                <Strip data={strip} pdfRef={pdfRef} />
+                <div ref={pdfRef}>
+                    <Header normalText={openDialog} />
+                    <Divider className={classes.divider} />
+                    <Strip data={strip} />
+                </div>
                 <Grow in={strip.exists && !strip.loading}>
                     <Button
                         variant="contained"
@@ -140,13 +160,13 @@ const Content = () => {
                     </Button>
                 </Grow>
                 <a
-                    download={`Tirilla Digital - ${strip.strip?.idLlamada} - ${strip.strip?.fechaLlamada}.txt`}
+                    download={`Relación de despachos - ${strip.strip?.idLlamada} - ${strip.strip?.fechaLlamada}.txt`}
                     ref={linkRef}
                     href={downloadUrl}
                     hidden
                 />
             </Container>
-            <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+            <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="xs">
                 <DialogTitle>
                     Descargar Tirilla
                 </DialogTitle>
@@ -157,7 +177,7 @@ const Content = () => {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => downloadStripe('txt')} variant="contained">Archivo de Texto (.txt)</Button>
+                    <Button onClick={() => downloadStripe('txt')} variant="contained">Archivo de Texto</Button>
                     <Button onClick={() => downloadStripe('pdf')} variant="contained">PDF</Button>
                 </DialogActions>
             </Dialog>

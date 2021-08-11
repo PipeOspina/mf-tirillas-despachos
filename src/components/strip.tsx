@@ -3,7 +3,7 @@
 import {
     Card, CircularProgress, Theme, Typography,
 } from '@material-ui/core';
-import React, { MutableRefObject, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Error } from '@material-ui/icons';
 
@@ -11,7 +11,6 @@ import { IStripComponentData } from '../interfaces/Strip';
 
 interface Props {
     data: IStripComponentData;
-    pdfRef: MutableRefObject<HTMLDivElement>;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -36,7 +35,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     text: {
         margin: `${theme.spacing(1)} 0`,
         whiteSpace: 'break-spaces',
-        fontSize: 14,
+        [theme.breakpoints.up('md')]: {
+            fontSize: 14,
+        },
+        [theme.breakpoints.between('sm', 'md')]: {
+            fontSize: 12,
+        },
+        [theme.breakpoints.down('sm')]: {
+            fontSize: 10,
+        },
     },
     center: {
         alignItems: 'center',
@@ -53,7 +60,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 }));
 
-const Strip = ({ data, pdfRef }: Props) => {
+const Strip = ({ data }: Props) => {
     const [substrings, setSubstrings] = useState<{
         str: { before: string, after: string }, pos: { start: number, end: number }
     }[]>([]);
@@ -92,7 +99,7 @@ const Strip = ({ data, pdfRef }: Props) => {
 
     return (
         <>
-            <Card elevation={3} className={classes.root} ref={pdfRef}>
+            <Card elevation={3} className={classes.root}>
                 <div
                     className={`
                         ${classes.topBorder}
@@ -106,31 +113,33 @@ const Strip = ({ data, pdfRef }: Props) => {
                     `}
                 >
                     {
-                        data.exists && !data.loading && (
+                        data.exists && !data.loading && data.strip?.tiquete && (
                             <code className={classes.text}>
                                 {
-                                    substrings.map((substring, i) => (
-                                        <span key={`BLANK_LINK_${substring.str.after.toUpperCase()}`}>
-                                            {substring.str.before}
-                                            <a
-                                                href={`https://${substring.str.after.replace(',', '')}`}
-                                                target="_blank"
-                                                rel="noreferrer"
-                                            >
-                                                {substring.str.after}
-                                            </a>
-                                            {
-                                                substrings.length === (i + 1)
-                                                && data
-                                                    .strip
-                                                    ?.tiquete
-                                                    .substring(
-                                                        substring.pos.end,
-                                                        data.strip?.tiquete.length,
-                                                    )
-                                            }
-                                        </span>
-                                    ))
+                                    substrings.length
+                                        ? substrings.map((substring, i) => (
+                                            <span key={`BLANK_LINK_${substring.str.after.toUpperCase()}`}>
+                                                {substring.str.before}
+                                                <a
+                                                    href={`https://${substring.str.after.replace(',', '')}`}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                >
+                                                    {substring.str.after}
+                                                </a>
+                                                {
+                                                    substrings.length === (i + 1)
+                                                    && data
+                                                        .strip
+                                                        ?.tiquete
+                                                        .substring(
+                                                            substring.pos.end,
+                                                            data.strip?.tiquete.length,
+                                                        )
+                                                }
+                                            </span>
+                                        ))
+                                        : data.strip.tiquete
                                 }
                                 <div />
                             </code>

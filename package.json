@@ -2,13 +2,16 @@
   "name": "mf-tirillas-despachos",
   "version": "1.0.0",
   "scripts": {
-    "start": "webpack serve --mode production",
-    "dev": "webpack serve --mode development",
-    "start:test": "webpack serve --mode development --env test",
-    "build": "webpack --mode production",
-    "build:dev": "webpack --mode development",
-    "build:test": "webpack --mode development --env test",
-    "lint": "eslint src/*"
+    "start": "yarn && webpack serve --mode production",
+    "dev": "yarn && webpack serve --mode development --host 0.0.0.0",
+    "start:test": "yarn && webpack serve --mode development --env test",
+    "build": "yarn && webpack --mode production",
+    "build:dev": "yarn && webpack --mode development",
+    "build:test": "yarn && webpack --mode development --env test",
+    "lint": "eslint src/*",
+    "deploy": "yarn build && gcloud app deploy --project cm-tim-goo --quiet && rm -rf public/",
+    "deploy:dev": "yarn build:dev && gcloud app deploy --project cm-tim-goo-dev --quiet && rm -rf public/",
+    "deploy:test": "yarn build:test && gcloud app deploy --project cm-tim-goo-test --quiet && rm -rf public/"
   },
   "repository": "git@github.com:PipeOspina/mf-tirillas-despachos.git",
   "author": "Felipe Ospina <pipe.98.oh@gmail.com>",

@@ -1,0 +1,35 @@
+runtime: nodejs14
+env: standard
+
+service: relacion-tirillas
+
+handlers:
+  - url: /(.*\.js)$
+    secure: always
+    static_files: public/\1
+    upload: public/.*\.js$
+    mime_type: application/javascript
+    http_headers:
+      Access-Control-Allow-Origin: '*'
+
+  - url: /(.*\.(css|map|png|jpg|svg|ico|json|txt|woff))$
+    secure: always
+    redirect_http_response_code: 301
+    static_files: public/\1
+    upload: public/.*\.(css|map|png|jpg|svg|ico|json|txt|woff)$
+
+  - url: /
+    secure: always
+    redirect_http_response_code: 301
+    static_files: public/index.html
+    upload: public/index.html
+    http_headers:
+      Access-Control-Allow-Origin: '*'
+
+  - url: /.*
+    secure: always
+    redirect_http_response_code: 301
+    static_files: public/index.html
+    upload: public/index.html
+    http_headers:
+      Access-Control-Allow-Origin: '*'
