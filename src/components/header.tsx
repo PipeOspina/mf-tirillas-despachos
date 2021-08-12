@@ -70,7 +70,8 @@ const Header = ({ normalText }: Props) => {
             <div className={classes.title}>
                 <Typography variant="h5"><b>Relación de despachos</b></Typography>
                 <Typography align="center" className={normalText ? '' : classes.text}>
-                    ¡Hola! Te presentamos tu tirilla digital para la revisión y descarga de ella
+                    ¡Hola! Te presentamos tu relación de despachos
+                    para la revisión y descarga de ella
                 </Typography>
             </div>
         </div>

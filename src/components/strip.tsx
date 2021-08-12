@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         justifyContent: 'center',
     },
     error: {
-        maxWidth: '60%',
+        maxWidth: '85%',
         whiteSpace: 'break-spaces',
     },
 }));
@@ -158,7 +158,8 @@ const Strip = ({ data }: Props) => {
                                 <br />
                                 <br />
                                 <Typography className={classes.error} align="center" color="error">
-                                    No encontramos la tirilla que intentas visualizar.
+                                    No hemos encontrado la relación
+                                    de despachos que intentas visualizar.
                                     <br />
                                     <br />
                                     Intenta de nuevo más tarde o contacta a soporte técnico.
