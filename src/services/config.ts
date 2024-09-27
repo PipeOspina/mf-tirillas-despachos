@@ -1,6 +1,6 @@
 import firebase from 'firebase/app';
-import 'firebase/firestore';
 import 'firebase/auth';
+import 'firebase/firestore';
 
 const config = {
     apiKey: process.env.FIREBASE_API_KEY,
@@ -18,8 +18,8 @@ const app = firebase.initializeApp(config);
 app
     .auth()
     .signInWithEmailAndPassword(
-        process.env.AUTH_USER,
-        process.env.AUTH_PASSWORD,
+        process.env.AUTH_USER ?? '',
+        process.env.AUTH_PASSWORD ?? '',
     );
 
 export const firestore = app.firestore();

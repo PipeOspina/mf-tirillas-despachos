@@ -15,7 +15,7 @@ interface Props {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        height: '65vh',
+        height: '58vh',
     },
     topBorder: {
         backgroundColor: theme.palette.primary.main,
@@ -87,11 +87,11 @@ const Strip = ({ data }: Props) => {
             setSubstrings(subs.map((sub, i) => ({
                 ...sub,
                 str: {
-                    after: sub.str,
+                    after: sub.str ?? '',
                     before: data
                         .strip
                         ?.tiquete
-                        .substring(i === 0 ? 0 : subs[i - 1].pos.end, sub.pos.start),
+                        .substring(i === 0 ? 0 : subs[i - 1].pos.end, sub.pos.start) ?? '',
                 },
             })));
         }

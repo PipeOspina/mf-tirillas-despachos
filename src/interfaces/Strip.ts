@@ -9,6 +9,7 @@ export interface IStrip<DateType = Date> {
     nombreRemitente: string;
     terminal: number;
     tiquete: string;
+    guias?: string;
 }
 
 export interface IStripComponentData {

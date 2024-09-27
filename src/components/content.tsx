@@ -12,12 +12,11 @@ import {
     Grow,
     Theme,
 } from '@material-ui/core';
-import { GetApp } from '@material-ui/icons';
+import { GetApp, GpsFixed } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
 import React, { useEffect, useRef, useState } from 'react';
 import { savePDF } from '@progress/kendo-react-pdf';
 import { useLocation } from 'react-router-dom';
-
 import { stripService } from '../services/firestore';
 import Header from './header';
 import Strip from './strip';
@@ -44,6 +43,14 @@ const useStyles = makeStyles((theme: Theme) => ({
         backgroundColor: 'white !important',
         color: `${theme.palette.primary.main} !important`,
         width: '100%',
+        marginTop: `${theme.spacing(2)} !important`,
+        height: 42,
+    },
+    trackingButton: {
+        borderRadius: '50px !important',
+        backgroundColor: 'white !important',
+        color: `${theme.palette.primary.main} !important`,
+        width: '100%',
         marginTop: `${theme.spacing(3)} !important`,
         height: 42,
     },
@@ -66,7 +73,7 @@ const Content = () => {
         switch (type) {
         case 'pdf':
             savePDF(
-                pdfRef.current,
+                pdfRef.current as HTMLElement,
                 {
                     paperSize: 'A4',
                     margin: {
@@ -81,12 +88,37 @@ const Content = () => {
             );
             break;
         case 'txt':
-            linkRef.current.click();
+            // eslint-disable-next-line no-unused-expressions
+            linkRef.current?.click();
             break;
         default:
             break;
         }
         setOpenDialog(false);
+    };
+
+    const goToTracking = () => {
+        const guias = strip.strip?.guias ?? '';
+
+        if (!guias.includes(',')) {
+            window.location.href = `https://coordinadora.com/rastreo/rastreo-de-guia/detalle-de-rastreo-de-guia/?guia=${guias}`;
+            return;
+        }
+
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = 'https://coordinadora.com/rastreo/rastreo-guias-multiples/detalle-rastreo-de-guias-multiples/';
+
+        const input = document.createElement('input');
+        input.name = 'guias';
+        input.type = 'text';
+        input.value = guias;
+
+        form.appendChild(input);
+        const body = document.querySelector('body');
+        if (body) body.appendChild(form);
+
+        form.submit();
     };
 
     useEffect(() => {
@@ -148,6 +180,17 @@ const Content = () => {
                     <Divider className={classes.divider} />
                     <Strip data={strip} />
                 </div>
+                <Grow in={strip.exists && !strip.loading && Boolean(strip.strip?.guias)}>
+                    <Button
+                        variant="contained"
+                        startIcon={<GpsFixed />}
+                        className={classes.trackingButton}
+                        onClick={goToTracking}
+                        disabled={!strip.exists || strip.loading}
+                    >
+                        Rastreo
+                    </Button>
+                </Grow>
                 <Grow in={strip.exists && !strip.loading}>
                     <Button
                         variant="contained"
